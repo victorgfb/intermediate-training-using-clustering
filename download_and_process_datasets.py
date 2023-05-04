@@ -72,9 +72,7 @@ def load_ag_news_dbpedia_yahoo():
             x = x[:-1]
         return html.unescape(x)
 
-    dataset_to_columns = {'ag_news': ["label", "title", "text"],
-                          'dbpedia': ["label", "title", "text"],
-                          'yahoo_answers': ['label', 'question_title', 'question_content', 'answer']}
+    dataset_to_columns = {'yahoo_answers': ['label', 'question_title', 'question_content', 'answer']}
 
     for dataset, column_names in dataset_to_columns.items():
         logging.info(f'processing {dataset} csv files')
@@ -180,8 +178,4 @@ if __name__ == '__main__':
                 zip_ref.extractall(out_dir)
 
     load_polarity()
-    load_subjectivity()
-    load_20_newsgroup()
     load_ag_news_dbpedia_yahoo()
-    load_isear()
-    load_sms_spam()
