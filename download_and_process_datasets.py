@@ -154,12 +154,12 @@ if __name__ == '__main__':
     dataset_to_download_url = \
         {
             'polarity': 'http://www.cs.cornell.edu/people/pabo/movie-review-data/rt-polaritydata.tar.gz',
-            'subjectivity': 'http://www.cs.cornell.edu/people/pabo/movie-review-data/rotten_imdb.tar.gz',
-            'isear': 'https://raw.githubusercontent.com/sinmaniphel/py_isear_dataset/master/isear.csv',
-            'ag_news': 'https://docs.google.com/uc?export=download&id=0Bz8a_Dbh9QhbUDNpeUdjb0wxRms',
-            'dbpedia': 'https://docs.google.com/uc?export=download&id=0Bz8a_Dbh9QhbQ2Vic1kxMmZZQ1k&confirm=t',
+            # 'subjectivity': 'http://www.cs.cornell.edu/people/pabo/movie-review-data/rotten_imdb.tar.gz',
+            # 'isear': 'https://raw.githubusercontent.com/sinmaniphel/py_isear_dataset/master/isear.csv',
+            # 'ag_news': 'https://docs.google.com/uc?export=download&id=0Bz8a_Dbh9QhbUDNpeUdjb0wxRms',
+            # 'dbpedia': 'https://docs.google.com/uc?export=download&id=0Bz8a_Dbh9QhbQ2Vic1kxMmZZQ1k&confirm=t',
             'yahoo_answers': 'https://docs.google.com/uc?export=download&id=0Bz8a_Dbh9Qhbd2JNdDBsQUdocVU&confirm=t',
-            'sms_spam': 'https://archive.ics.uci.edu/ml/machine-learning-databases/00228/smsspamcollection.zip'
+            # 'sms_spam': 'https://archive.ics.uci.edu/ml/machine-learning-databases/00228/smsspamcollection.zip'
         }
 
     for dataset, url in dataset_to_download_url.items():
