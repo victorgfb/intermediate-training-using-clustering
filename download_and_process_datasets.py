@@ -23,8 +23,8 @@ def split_and_save(df, dataset):
     out_dir = os.path.join(OUT_DIR, dataset)
     os.makedirs(out_dir, exist_ok=True)
     # split into train/dev/test by 7:1:2 ratio
-    train_dev, test = train_test_split(df, test_size=0.2, random_state=42)
-    train, dev = train_test_split(train_dev, test_size=0.125, random_state=42)
+    train_dev, test = train_test_split(df, test_size=0.2, random_state=5)
+    train, dev = train_test_split(train_dev, test_size=0.125, random_state=5)
     # save csv files
     train.to_csv(os.path.join(out_dir, 'train.csv'), index=False)
     dev.to_csv(os.path.join(out_dir, 'dev.csv'), index=False)
