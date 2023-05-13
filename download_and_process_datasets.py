@@ -23,43 +23,12 @@ def split_and_save(df, dataset):
     out_dir = os.path.join(OUT_DIR, dataset)
     os.makedirs(out_dir, exist_ok=True)
     # split into train/dev/test by 7:1:2 ratio
-    train_dev, test = train_test_split(df, test_size=0.2)
-    train, dev = train_test_split(train_dev, test_size=0.125)
+    train_dev, test = train_test_split(df, test_size=0.2, random_state=42)
+    train, dev = train_test_split(train_dev, test_size=0.125, random_state=42)
     # save csv files
     train.to_csv(os.path.join(out_dir, 'train.csv'), index=False)
     dev.to_csv(os.path.join(out_dir, 'dev.csv'), index=False)
     test.to_csv(os.path.join(out_dir, 'test.csv'), index=False)
-
-
-def load_20_newsgroup():
-    def clean_text(x):
-        x = re.sub('#\S+;', '&\g<0>', x)
-        x = re.sub('(\w+)\\\(\w+)', '\g<1> \g<2>', x)
-        x = x.replace('quot;', '&quot;')
-        x = x.replace('amp;', '&amp;')
-        x = x.replace('\$', '$')
-        x = x.replace("\r\n", " ").replace("\n", " ")
-        x = x.strip()
-        while x.endswith("\\"):
-            x = x[:-1]
-        return html.unescape(x)
-
-    out_dir_20_newsgroup = os.path.join(OUT_DIR, "20_newsgroup")
-    os.makedirs(out_dir_20_newsgroup, exist_ok=True)
-    newsgroups_train = fetch_20newsgroups(subset='train')
-    df = pd.DataFrame({"text": newsgroups_train["data"], "label": newsgroups_train["target"]})
-    df["text"] = df["text"].apply(lambda x: clean_text(x))
-    train, dev = train_test_split(df, test_size=0.1)
-    train.to_csv(os.path.join(out_dir_20_newsgroup, "train.csv"), index=False)
-    dev.to_csv(os.path.join(out_dir_20_newsgroup, "dev.csv"), index=False)
-    logging.info(f"20_newsgroup train file created with {len(train)} samples")
-    logging.info(f"20_newsgroup dev file created with {len(dev)} samples")
-    newsgroups_train = fetch_20newsgroups(subset='test')
-    df = pd.DataFrame({"text": newsgroups_train["data"], "label": newsgroups_train["target"]})
-    df["text"] = df["text"].apply(lambda x: clean_text(x))
-    df.to_csv(os.path.join(out_dir_20_newsgroup, "test.csv"), index=False)
-    logging.info(f"20_newsgroup test file created with {len(df)} samples")
-
 
 def load_ag_news_dbpedia_yahoo():
     def clean_text(x):
@@ -102,26 +71,9 @@ def load_ag_news_dbpedia_yahoo():
                 # we limit the maximum train to MAX_SIZE
                 if len(part_df) > MAX_SIZE/(1-0.125):
                     part_df = part_df.sample(n=int(MAX_SIZE/(1-0.125)), random_state=0)
-                train, dev = train_test_split(part_df, test_size=0.125)
+                train, dev = train_test_split(part_df, test_size=0.125, random_state=42)
                 train.to_csv(os.path.join(dataset_out_dir, 'train.csv'), index=False)
                 dev.to_csv(os.path.join(dataset_out_dir, 'dev.csv'), index=False)
-
-
-def load_isear():
-    df = pd.read_csv(os.path.join(RAW_DIR, 'isear', 'isear.csv'), sep='|', quotechar='"', on_bad_lines='warn')
-    df = df[['SIT', 'Field1']]
-    df.columns = ['text', 'label']
-    df['text'] = df['text'].apply(lambda x: x.replace('á\n', ''))
-
-    split_and_save(df, 'isear')
-
-
-def load_sms_spam():
-    raw_path = os.path.join(RAW_DIR, 'sms_spam')
-    df = pd.read_csv(os.path.join(raw_path, "SMSSpamCollection"), delimiter='\t', names=['label', 'text'])
-
-    split_and_save(df, 'sms_spam')
-
 
 def load_polarity():
     polarity_raw_dir = os.path.join(RAW_DIR, 'polarity', 'rt-polaritydata')
@@ -152,12 +104,7 @@ if __name__ == '__main__':
     dataset_to_download_url = \
         {
             'polarity': 'http://www.cs.cornell.edu/people/pabo/movie-review-data/rt-polaritydata.tar.gz',
-            # 'subjectivity': 'http://www.cs.cornell.edu/people/pabo/movie-review-data/rotten_imdb.tar.gz',
-            # 'isear': 'https://raw.githubusercontent.com/sinmaniphel/py_isear_dataset/master/isear.csv',
-            # 'ag_news': 'https://docs.google.com/uc?export=download&id=0Bz8a_Dbh9QhbUDNpeUdjb0wxRms',
-            # 'dbpedia': 'https://docs.google.com/uc?export=download&id=0Bz8a_Dbh9QhbQ2Vic1kxMmZZQ1k&confirm=t',
             'yahoo_answers': 'https://docs.google.com/uc?export=download&id=0Bz8a_Dbh9Qhbd2JNdDBsQUdocVU&confirm=t',
-            # 'sms_spam': 'https://archive.ics.uci.edu/ml/machine-learning-databases/00228/smsspamcollection.zip'
         }
 
     for dataset, url in dataset_to_download_url.items():
